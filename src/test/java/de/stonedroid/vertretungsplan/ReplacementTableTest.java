@@ -1,3 +1,5 @@
+package de.stonedroid.vertretungsplan;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,7 +23,7 @@ public class ReplacementTableTest
             try
             {
                 // Initialize tables using html downloaded by hand
-                String resourceName = String.format("example%d.html", i + 1);
+                String resourceName = String.format("/example%d.html", i + 1);
                 String html = Utils.readFileToEnd(getClass().getResource(resourceName).getFile());
                 tables[i] = ReplacementTable.parseFromHtml(html);
             }

@@ -1,3 +1,5 @@
+package de.stonedroid.vertretungsplan;
+
 import java.io.*;
 
 /**

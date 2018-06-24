@@ -1,3 +1,5 @@
+package de.stonedroid.vertretungsplan;
+
 /**
  * All criteria which can be used to filter replacements
  */

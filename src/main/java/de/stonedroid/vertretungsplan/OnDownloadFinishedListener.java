@@ -1,3 +1,5 @@
+package de.stonedroid.vertretungsplan;
+
 /**
  * Listener for async functionality of the ReplacementTable downloader
  */
