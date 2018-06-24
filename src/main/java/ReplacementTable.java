@@ -258,7 +258,7 @@ public class ReplacementTable
      * @param filter Filter map used to determine if replacement should be returned
      * @return All replacements after the filter was applied
      */
-    public List<Replacement> getReplacements(Map<ReplacementFilter, List<String>> filter)
+    public List<Replacement> getReplacements(Map<ReplacementFilter, String[]> filter)
     {
         // New List where filtered replacements will be added
         ArrayList<Replacement> filtered = new ArrayList<>();
@@ -272,10 +272,21 @@ public class ReplacementTable
 
             for (ReplacementFilter key : keys)
             {
-                List<String> values = filter.get(key);
+                String[] values = filter.get(key);
                 // If the replacement doesn't contain any filter value it shouldn't be added
                 // in the filtered list
-                if (!values.contains(data[key.ordinal()]))
+                boolean hasValue = false;
+
+                for (String value : values)
+                {
+                    if (data[key.ordinal()].contains(value))
+                    {
+                        hasValue = true;
+                        break;
+                    }
+                }
+
+                if (!hasValue)
                 {
                     breakOut = true;
                     break;
