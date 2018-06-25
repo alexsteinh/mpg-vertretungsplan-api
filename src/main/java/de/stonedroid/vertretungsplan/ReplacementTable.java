@@ -13,12 +13,13 @@ public class ReplacementTable
     // Contain their generic's collection
     private ArrayList<Replacement> replacements;
     private ArrayList<Message> messages;
+    private Grade grade;
 
     // Intern "constructor" for junit testing
     static ReplacementTable parseFromHtml(String html)
     {
         Object[] results = parseHtml(html);
-        return new ReplacementTable(results);
+        return new ReplacementTable(results, null);
     }
 
     /**
@@ -83,7 +84,7 @@ public class ReplacementTable
     {
         String html = downloadHtml(grade, plusWeeks);
         Object[] result = parseHtml(html);
-        return new ReplacementTable(result);
+        return new ReplacementTable(result, grade);
     }
 
     // Downloads html based on parameters
@@ -237,11 +238,12 @@ public class ReplacementTable
     }
 
     // Private constructor which initializes table with the help of the results object array
-    private ReplacementTable(Object[] results)
+    private ReplacementTable(Object[] results, Grade grade)
     {
         assert results.length == 2;
         replacements = (ArrayList<Replacement>) results[0];
         messages = (ArrayList<Message>) results[1];
+        this.grade = grade;
     }
 
     /**
@@ -312,5 +314,16 @@ public class ReplacementTable
     public List<Message> getMessages()
     {
         return messages;
+    }
+
+
+    /**
+     * Returns the ReplacementTable's grade
+     *
+     * @return Grade of the ReplacementTable
+     */
+    public Grade getGrade()
+    {
+        return grade;
     }
 }
