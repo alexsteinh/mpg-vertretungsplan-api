@@ -57,6 +57,16 @@ public class Grade
     }
 
     /**
+     * Returns all possible values of grade
+     *
+     * @return All grade names
+     */
+    public static List<String> getGradeNames()
+    {
+        return grades;
+    }
+
+    /**
      * Returns ready for site-scraping number to place into the scraping url.
      *
      * @return ready for site-scraping number to place into the scraping url
