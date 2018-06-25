@@ -19,6 +19,16 @@ public class Replacement
     }
 
     /**
+     * Returns all information of replacement
+     *
+     * @return All data
+     */
+    public String[] getData()
+    {
+        return data.clone();
+    }
+
+    /**
      * Returns date of replacement
      *
      * @return date

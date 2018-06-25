@@ -17,6 +17,16 @@ public class Message
     }
 
     /**
+     * Returns grade's data
+     *
+     * @return All data
+     */
+    public String[] getData()
+    {
+        return data.clone();
+    }
+
+    /**
      * Returns grade's date
      *
      * @return date
