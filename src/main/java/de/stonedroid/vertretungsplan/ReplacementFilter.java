@@ -5,5 +5,5 @@ package de.stonedroid.vertretungsplan;
  */
 public enum ReplacementFilter
 {
-    DATE, GRADE, PERIOD, SUBJECT, ROOM, OLD_SUBJECT, TEXT
+    DATE, DAY, GRADE, PERIOD, SUBJECT, ROOM, OLD_SUBJECT, TEXT
 }

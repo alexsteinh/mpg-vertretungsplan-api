@@ -118,8 +118,9 @@ public class ReplacementTable
         // Get line separator and split html into lines
         String separator = html.contains("\r\n") ? "\r\n" : "\n";
         String[] lines = html.split(separator);
-        // Variable to store current date
+        // Variable to store current date and day name
         String currentDate = "";
+        String currentDay = "";
         // Boolean which indicates that we are currently building the message text
         boolean inMessage = false;
         // String builder to build message text
@@ -144,6 +145,9 @@ public class ReplacementTable
                 int start = line.indexOf("<b>") + 3; // Add 3 because keyword "<b>" is 3 chars long.
                 int end = line.indexOf(" ", start);
                 currentDate = line.substring(start, end);
+                start += currentDate.length() + 1;
+                end = line.indexOf("</", start);
+                currentDay = line.substring(start, end);
                 continue;
             }
 
@@ -163,11 +167,16 @@ public class ReplacementTable
                 int start = line.indexOf("\">") + 2; // Add 2 because keyword "">" is 2 chars long
                 line = line.substring(start, line.length());
                 // Get data by splitting line with keyword "</td><td class="list" align="center">"
-                String[] data = line.split("</td><td class=\"list\" align=\"center\">");
+                ArrayList<String> data = new ArrayList<>(Arrays.asList(line.split("</td><td class=\"list\" align=\"center\">")));
+                data.add(1, currentDay);
                 // Remove html tags from data piece
-                data[6] = data[6].replace("</td></tr>", "");
+                data.set(7, data.get(7).replace("</td></tr>", ""));
+                // Convert to String Array
+                String[] data_arr = new String[data.size()];
+                data_arr = data.toArray(data_arr);
                 // Build replacement
-                Replacement.Builder builder = Replacement.Builder.fromData(data);
+                Replacement.Builder builder = Replacement.Builder
+                        .fromData(data_arr);
                 Replacement replacement = builder.create();
                 replacements.add(replacement);
                 continue;
@@ -188,6 +197,7 @@ public class ReplacementTable
                 // Build message and it to our list
                 Message.Builder builder = new Message.Builder()
                         .setText(messageTextBuilder.toString())
+                        .setDay(currentDay)
                         .setDate(currentDate);
                 Message message = builder.create();
                 messages.add(message);

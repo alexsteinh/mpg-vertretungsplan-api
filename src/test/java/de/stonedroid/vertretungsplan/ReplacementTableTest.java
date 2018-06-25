@@ -40,16 +40,16 @@ public class ReplacementTableTest
         String[][] expected = new String[][]
                 {
                         {
-                                "22.6. | 11 | 5 - 6 | --- | --- | rev2 | Exkursion",
-                                "22.6. | 11 | 1 - 2 | E2 | 101 R | E2 | E findet statt",
-                                "22.6. | 11 | 1 - 2 | --- | --- | E5 | fällt aus"
+                                "22.6. | Freitag | 11 | 5 - 6 | --- | --- | rev2 | Exkursion",
+                                "22.6. | Freitag | 11 | 1 - 2 | E2 | 101 R | E2 | E findet statt",
+                                "22.6. | Freitag | 11 | 1 - 2 | --- | --- | E5 | fällt aus"
                         },
                         {
-                                "25.6. | 11 | 5 - 6 | --- | --- | bio2 | fällt aus"
+                                "25.6. | Montag | 11 | 5 - 6 | --- | --- | bio2 | fällt aus"
                         },
                         {
-                                "25.6. | 10A | 3 | D | 122 R | B | Tausch",
-                                "25.6. | 10A | 4 | D | 122 R | B | Tausch"
+                                "25.6. | Montag | 10A | 3 | D | 122 R | B | Tausch",
+                                "25.6. | Montag | 10A | 4 | D | 122 R | B | Tausch"
                         }
                 };
 
@@ -71,13 +71,13 @@ public class ReplacementTableTest
         String[][] expected = new String[][]
                 {
                         {
-                                "22.6. | 11 | 1 - 2 | E2 | 101 R | E2 | E findet statt",
-                                "22.6. | 11 | 1 - 2 | --- | --- | E5 | fällt aus"
+                                "22.6. | Freitag | 11 | 1 - 2 | E2 | 101 R | E2 | E findet statt",
+                                "22.6. | Freitag | 11 | 1 - 2 | --- | --- | E5 | fällt aus"
                         },
                         {
                         },
                         {
-                                "25.6. | 10A | 4 | D | 122 R | B | Tausch"
+                                "25.6. | Montag | 10A | 4 | D | 122 R | B | Tausch"
                         }
                 };
 

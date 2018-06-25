@@ -39,13 +39,23 @@ public class Replacement
     }
 
     /**
+     * Returns day of replacement
+     *
+     * @return day
+     */
+    public String getDay()
+    {
+        return data[1];
+    }
+
+    /**
      * Returns grade of replacement
      *
      * @return grade
      */
     public String getGrade()
     {
-        return data[1];
+        return data[2];
     }
 
     /**
@@ -55,7 +65,7 @@ public class Replacement
      */
     public String getPeriod()
     {
-        return data[2];
+        return data[3];
     }
 
     /**
@@ -65,7 +75,7 @@ public class Replacement
      */
     public String getSubject()
     {
-        return data[3];
+        return data[4];
     }
 
     /**
@@ -75,7 +85,7 @@ public class Replacement
      */
     public String getRoom()
     {
-        return data[4];
+        return data[5];
     }
 
     /**
@@ -85,7 +95,7 @@ public class Replacement
      */
     public String getOldSubject()
     {
-        return data[5];
+        return data[6];
     }
 
     /**
@@ -95,7 +105,7 @@ public class Replacement
      */
     public String getText()
     {
-        return data[6];
+        return data[7];
     }
 
     /**
@@ -185,8 +195,8 @@ public class Replacement
          */
         public Builder()
         {
-            // Every Replacement contains exactly 7 strings with information
-            data = new String[7];
+            // Every Replacement contains exactly 8 strings with information
+            data = new String[8];
         }
 
         /**
@@ -202,6 +212,18 @@ public class Replacement
         }
 
         /**
+         * Sets day of the current builder
+         *
+         * @param day New day name
+         * @return Current Builder with new day
+         */
+        public Builder setDay(String day)
+        {
+            data[1] = day;
+            return this;
+        }
+
+        /**
          * Sets grade of the current builder
          *
          * @param grade New grade
@@ -209,7 +231,7 @@ public class Replacement
          */
         public Builder setGrade(String grade)
         {
-            data[1] = grade;
+            data[2] = grade;
             return this;
         }
 
@@ -221,7 +243,7 @@ public class Replacement
          */
         public Builder setPeriod(String period)
         {
-            data[2] = period;
+            data[3] = period;
             return this;
         }
 
@@ -233,7 +255,7 @@ public class Replacement
          */
         public Builder setSubject(String subject)
         {
-            data[3] = subject;
+            data[4] = subject;
             return this;
         }
 
@@ -245,7 +267,7 @@ public class Replacement
          */
         public Builder setRoom(String room)
         {
-            data[4] = room;
+            data[5] = room;
             return this;
         }
 
@@ -257,7 +279,7 @@ public class Replacement
          */
         public Builder setOldSubject(String oldSubject)
         {
-            data[5] = oldSubject;
+            data[6] = oldSubject;
             return this;
         }
 
@@ -269,7 +291,7 @@ public class Replacement
          */
         public Builder setText(String text)
         {
-            data[6] = text;
+            data[7] = text;
             return this;
         }
 

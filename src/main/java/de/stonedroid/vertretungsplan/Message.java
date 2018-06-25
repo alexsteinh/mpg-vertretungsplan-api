@@ -37,13 +37,23 @@ public class Message
     }
 
     /**
+     * Returns grade's day
+     *
+     * @return day
+     */
+    public String getDay()
+    {
+        return data[1];
+    }
+
+    /**
      * Returns grade's text
      *
      * @return text
      */
     public String getText()
     {
-        return data[1];
+        return data[2];
     }
 
     /**
@@ -54,7 +64,7 @@ public class Message
     @Override
     public String toString()
     {
-        return data[0].concat(" | ").concat(data[1]);
+        return data[0].concat(" | ").concat(data[1]).concat(" | ").concat(data[2]);
     }
 
     /**
@@ -119,7 +129,7 @@ public class Message
          */
         public Builder()
         {
-            data = new String[2];
+            data = new String[3];
         }
 
         /**
@@ -135,6 +145,18 @@ public class Message
         }
 
         /**
+         * Sets day of the current builder
+         *
+         * @param day New day name
+         * @return Current Builder with new day
+         */
+        public Builder setDay(String day)
+        {
+            data[1] = day;
+            return this;
+        }
+
+        /**
          * Sets text of the current builder
          *
          * @param text New text
@@ -142,7 +164,7 @@ public class Message
          */
         public Builder setText(String text)
         {
-            data[1] = text;
+            data[2] = text;
             return this;
         }
 
