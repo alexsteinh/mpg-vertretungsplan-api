@@ -56,6 +56,21 @@ public class Main
 
     private static void printReplacementTable(ReplacementTable table)
     {
+        System.out.println("Dates:");
+        String[] dates = table.getDates();
+
+        for (int i = 0; i < dates.length; i++)
+        {
+            if (i < dates.length - 1)
+            {
+                System.out.print(dates[i] + " ");
+            }
+            else
+            {
+                System.out.println(dates[i] + "\n");
+            }
+        }
+
         List<Replacement> replacements = table.getReplacements();
         List<Message> messages = table.getMessages();
         System.out.println("Replacements:");
