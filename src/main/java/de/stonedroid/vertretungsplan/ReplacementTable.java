@@ -209,7 +209,7 @@ public class ReplacementTable
                 Message message = builder.create();
                 messages.add(message);
                 // Reset messageTextBuilder
-                messageTextBuilder.delete(0, messageTextBuilder.length() - 1);
+                messageTextBuilder = new StringBuilder();
                 continue;
             }
 
