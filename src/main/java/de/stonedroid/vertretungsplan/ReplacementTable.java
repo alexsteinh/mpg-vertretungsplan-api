@@ -347,6 +347,11 @@ public class ReplacementTable
                 // If true: both replacements can be merged together
                 int p1 = Integer.parseInt(r1.getPeriod());
                 int p2 = Integer.parseInt(r2.getPeriod());
+                if (Math.abs(p1 - p2) != 1)
+                {
+                    continue;
+                }
+
                 if (p1 > p2)
                 {
                     int tmp = p1;
