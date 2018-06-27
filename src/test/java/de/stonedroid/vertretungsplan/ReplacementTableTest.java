@@ -48,8 +48,7 @@ public class ReplacementTableTest
                                 "25.6. | Montag | 11 | 5 - 6 | --- | --- | bio2 | fällt aus"
                         },
                         {
-                                "25.6. | Montag | 10A | 3 | D | 122 R | B | Tausch",
-                                "25.6. | Montag | 10A | 4 | D | 122 R | B | Tausch"
+                                "25.6. | Montag | 10A | 3 - 4 | D | 122 R | B | Tausch",
                         }
                 };
 
@@ -77,7 +76,7 @@ public class ReplacementTableTest
                         {
                         },
                         {
-                                "25.6. | Montag | 10A | 4 | D | 122 R | B | Tausch"
+                                "25.6. | Montag | 10A | 3 - 4 | D | 122 R | B | Tausch"
                         }
                 };
 

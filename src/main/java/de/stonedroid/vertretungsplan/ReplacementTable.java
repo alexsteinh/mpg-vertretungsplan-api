@@ -265,6 +265,8 @@ public class ReplacementTable
         messages = (ArrayList<Message>) results[1];
         dates = (String[]) results[2];
         this.grade = grade;
+        // Remove double replacements
+        optimize();
     }
 
     /**
@@ -325,6 +327,45 @@ public class ReplacementTable
         }
 
         return filtered;
+    }
+
+    // Merges two replacements with equal content into one
+    private void optimize()
+    {
+        for (int i = 0; i < replacements.size() - 1; i++)
+        {
+            Replacement r1 = replacements.get(i);
+            Replacement r2 = replacements.get(i + 1);
+            // Get replacements data for comparision
+            // Set period to ""
+            String[] data1 = r1.getData();
+            data1[3] = "";
+            String[] data2 = r2.getData();
+            data2[3] = "";
+            if (Arrays.equals(data1, data2))
+            {
+                // If true: both replacements can be merged together
+                int p1 = Integer.parseInt(r1.getPeriod());
+                int p2 = Integer.parseInt(r2.getPeriod());
+                if (p1 > p2)
+                {
+                    int tmp = p1;
+                    p1 = p2;
+                    p2 = tmp;
+                }
+
+                String period = String.format("%d - %d", p1, p2);
+                // Build new replacement
+                Replacement.Builder builder = Replacement.Builder
+                        .fromData(data1)
+                        .setPeriod(period);
+                Replacement replacement = builder.create();
+                // Delete old replacements (2 times)
+                for (int j = 0; j < 2; j++) replacements.remove(i);
+                // Add new replacement
+                replacements.add(i, replacement);
+            }
+        }
     }
 
     /**
