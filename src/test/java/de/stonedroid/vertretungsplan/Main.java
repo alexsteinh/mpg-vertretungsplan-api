@@ -56,6 +56,7 @@ public class Main
 
     private static void printReplacementTable(ReplacementTable table)
     {
+        // Print dates
         System.out.println("Dates:");
         String[] dates = table.getDates();
 
@@ -68,6 +69,22 @@ public class Main
             else
             {
                 System.out.println(dates[i] + "\n");
+            }
+        }
+
+        // Print days
+        System.out.println("Days:");
+        String[] days = table.getDays();
+
+        for (int i = 0; i < days.length; i++)
+        {
+            if (i < days.length - 1)
+            {
+                System.out.print(days[i] + " ");
+            }
+            else
+            {
+                System.out.println(days[i] + "\n");
             }
         }
 

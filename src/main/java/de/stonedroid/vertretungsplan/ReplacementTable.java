@@ -18,6 +18,7 @@ public class ReplacementTable
     private Grade grade;
     // A school week has 5 days
     private String[] dates;
+    private String[] days;
 
     // Intern "constructor" for junit testing
     static ReplacementTable parseFromHtml(String html)
@@ -112,8 +113,8 @@ public class ReplacementTable
         return client.downloadString(String.format(DOWNLOAD_URL, week, webCode));
     }
 
-    // Parses html and returns a 3-sized Object array
-    // Object[] = {ArrayList<Replacement>, ArrayList<Message>, String[]}
+    // Parses html and returns a 4-sized Object array
+    // Object[] = {ArrayList<Replacement>, ArrayList<Message>, String[], String[]}
     private static Object[] parseHtml(String html)
     {
         // Create collector lists for replacements and messages
@@ -126,6 +127,7 @@ public class ReplacementTable
         String currentDate = "";
         String currentDay = "";
         ArrayList<String> allDates = new ArrayList<>();
+        ArrayList<String> allDays = new ArrayList<>();
         // Boolean which indicates that we are currently building the message text
         boolean inMessage = false;
         // String builder to build message text
@@ -153,8 +155,9 @@ public class ReplacementTable
                 start += currentDate.length() + 1;
                 end = line.indexOf("</", start);
                 currentDay = line.substring(start, end);
-                // Add new date to global dates field
+                // Add new date/day to global dates field
                 allDates.add(currentDate);
+                allDays.add(currentDay);
                 continue;
             }
 
@@ -232,10 +235,14 @@ public class ReplacementTable
             }
         }
 
-        // Put dates into a string
+        // Put dates into an array
         String[] dates = new String[allDates.size()];
         dates = allDates.toArray(dates);
-        return new Object[] {replacements, messages, dates};
+        // Put days into an array
+        String[] days = new String[allDays.size()];
+        days = allDays.toArray(days);
+
+        return new Object[] {replacements, messages, dates, days};
     }
 
     // Removes all html tags in text which was retrieved using the parser from above
@@ -260,10 +267,11 @@ public class ReplacementTable
     // Private constructor which initializes table with the help of the results object array
     private ReplacementTable(Object[] results, Grade grade)
     {
-        assert results.length == 3;
+        assert results.length == 4;
         replacements = (ArrayList<Replacement>) results[0];
         messages = (ArrayList<Message>) results[1];
         dates = (String[]) results[2];
+        days = (String[]) results[3];
         this.grade = grade;
         // Remove double replacements
         optimize();
@@ -402,5 +410,15 @@ public class ReplacementTable
     public String[] getDates()
     {
         return dates.clone();
+    }
+
+    /**
+     * Retuns all days that are covered by the ReplacementTable
+     *
+     * @return All days of ReplacementTable
+     */
+    public String[] getDays()
+    {
+        return days.clone();
     }
 }
