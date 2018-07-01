@@ -179,11 +179,11 @@ public class ReplacementTable
                 // Get data by splitting line with keyword "</td><td class="list" align="center">"
                 ArrayList<String> data = new ArrayList<>(Arrays.asList(line.split("</td><td class=\"list\" align=\"center\">")));
                 data.add(1, currentDay);
-                // Remove html tags from data piece
-                data.set(7, data.get(7).replace("</td></tr>", ""));
                 // Convert to String Array
                 String[] data_arr = new String[data.size()];
                 data_arr = data.toArray(data_arr);
+                // Remove html tags from data piece
+                data_arr[7] = data_arr[7].replace("</td></tr>", "").replace("&nbsp;", "");
                 // Build replacement
                 Replacement.Builder builder = Replacement.Builder
                         .fromData(data_arr);
