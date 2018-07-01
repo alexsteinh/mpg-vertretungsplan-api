@@ -37,8 +37,11 @@ class WebClient
             }
 
             InputStream stream = connection.getInputStream();
-            // Return converted input stream.
-            return Utils.inputStreamToString(stream);
+            // Get converted input stream.
+            String html = Utils.inputStreamToString(stream);
+            // Close connection
+            stream.close();
+            return html;
         }
         catch (IOException e)
         {
