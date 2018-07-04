@@ -1,12 +1,13 @@
 package de.stonedroid.vertretungsplan;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
 /**
  * Grade class for using within the ReplacementTable downloader
  */
-public class Grade
+public class Grade implements Serializable
 {
     // All grade values that are possible
     private static final List<String> grades = Arrays.asList(

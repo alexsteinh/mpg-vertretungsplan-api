@@ -1,11 +1,12 @@
 package de.stonedroid.vertretungsplan;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
  * The "Nachrichten zum Tag" container
  */
-public class Message
+public class Message implements Serializable
 {
     // Intern array which holds all information
     String[] data;

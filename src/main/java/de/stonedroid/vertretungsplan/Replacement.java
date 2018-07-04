@@ -1,11 +1,12 @@
 package de.stonedroid.vertretungsplan;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
  * Contains all available information about an replacement
  */
-public class Replacement
+public class Replacement implements Serializable
 {
     // Intern data array containing all information
     String[] data;

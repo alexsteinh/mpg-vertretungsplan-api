@@ -1,11 +1,12 @@
 package de.stonedroid.vertretungsplan;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * Holds Messages and Replacements for the chosen grade
  */
-public class ReplacementTable
+public class ReplacementTable implements Serializable
 {
     // URL used to scrape off replacements and messages
     private static final String DOWNLOAD_URL = "http://mpg-vertretungsplan.de/w/%s/w000%s.htm";
