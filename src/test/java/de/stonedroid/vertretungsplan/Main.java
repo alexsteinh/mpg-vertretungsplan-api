@@ -1,21 +1,13 @@
 package de.stonedroid.vertretungsplan;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main
 {
-    public static void main(String[] args)
+    public static void main(String[] args) throws Exception
     {
-        System.out.println("" +
-                "--------------\n" +
-                "--- Test 1 ---\n" +
-                "--------------\n");
-        Test1();
-        System.out.println("" +
-                "\n---------------------------\n" +
-                "--- Test 2 (with async) ---\n" +
-                "---------------------------\n");
-        Test2();
+        Test3();
     }
 
     // Basic usage example
@@ -25,7 +17,7 @@ public class Main
         try
         {
             // Replace Grade.parse(x) with whatever grade you wish
-            table = ReplacementTable.downloadTable(Grade.parse("11"), 0);
+            table = ReplacementTable.downloadTable(Grade.parse("11"), 1);
         }
         catch (WebException e)
         {
@@ -35,10 +27,29 @@ public class Main
         printReplacementTable(table);
     }
 
+    public static void Test3()
+    {
+        List<String> names = Grade.getGradeNames();
+        ArrayList<Grade> grades = new ArrayList<>();
+        names.forEach(s -> grades.add(Grade.parse(s)));
+
+        for (Grade grade : grades)
+        {
+            try
+            {
+                ReplacementTable table = ReplacementTable.downloadTable(grade, 1);
+            }
+            catch (WebException e)
+            {
+                System.err.println("Struggling with " + grade);
+            }
+        }
+    }
+
     // Basic usage example (using async method)
     public static void Test2()
     {
-        ReplacementTable.downloadTableAsync(Grade.parse("11"), new OnDownloadFinishedListener()
+        ReplacementTable.downloadTableAsync(Grade.parse("12"), new OnDownloadFinishedListener()
         {
             @Override
             public void onFinished(ReplacementTable table)
@@ -57,6 +68,7 @@ public class Main
     private static void printReplacementTable(ReplacementTable table)
     {
         // Print dates
+        System.out.println("Grade: " + table.getGrade());
         System.out.println("Dates:");
         String[] dates = table.getDates();
 

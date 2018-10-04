@@ -4,6 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -83,21 +85,21 @@ public class ReplacementTableTest
         for (int i = 0; i < expected.length; i++)
         {
             // Configure a unique filter foreach replacement table
-            HashMap<ReplacementFilter, String[]> filter = new HashMap<>();
+            HashMap<ReplacementFilter, Collection<String>> filter = new HashMap<>();
             switch (i)
             {
                 case 0:
-                    filter.put(ReplacementFilter.PERIOD, new String[] {"1 - 2"});
-                    filter.put(ReplacementFilter.OLD_SUBJECT, new String[] {"E"});
+                    filter.put(ReplacementFilter.PERIOD, Arrays.asList("1 - 2"));
+                    filter.put(ReplacementFilter.OLD_SUBJECT, Arrays.asList("E"));
                     break;
                 case 1:
-                    filter.put(ReplacementFilter.TEXT, new String[] {"fällt"});
-                    filter.put(ReplacementFilter.ROOM, new String[] {"418"});
+                    filter.put(ReplacementFilter.TEXT, Arrays.asList("fällt"));
+                    filter.put(ReplacementFilter.ROOM, Arrays.asList("418"));
                     break;
                 case 2:
-                    filter.put(ReplacementFilter.ROOM, new String[] {"122"});
-                    filter.put(ReplacementFilter.SUBJECT, new String[] {"D"});
-                    filter.put(ReplacementFilter.PERIOD, new String[] {"4"});
+                    filter.put(ReplacementFilter.ROOM, Arrays.asList("122"));
+                    filter.put(ReplacementFilter.SUBJECT, Arrays.asList("D"));
+                    filter.put(ReplacementFilter.PERIOD, Arrays.asList("4"));
             }
 
             // Check whether there are as many filtered replacements as expected
