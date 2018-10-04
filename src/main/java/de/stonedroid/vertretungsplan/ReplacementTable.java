@@ -21,11 +21,20 @@ public class ReplacementTable implements Serializable
     private String[] dates;
     private String[] days;
 
+    private Calendar downloadDate;
+
     // Intern "constructor" for junit testing
     static ReplacementTable parseFromHtml(String html)
     {
-        Object[] results = parseHtml(html);
-        return new ReplacementTable(results, null);
+        try
+        {
+            Object[] results = parseHtml(html, null);
+            return new ReplacementTable(results, null, null);
+        }
+        catch (WebException e)
+        {
+            return null;
+        }
     }
 
     /**
@@ -89,8 +98,8 @@ public class ReplacementTable implements Serializable
     public static ReplacementTable downloadTable(Grade grade, int plusWeeks) throws WebException
     {
         String html = downloadHtml(grade, plusWeeks);
-        Object[] result = parseHtml(html);
-        return new ReplacementTable(result, grade);
+        Object[] result = parseHtml(html, grade);
+        return new ReplacementTable(result, grade, Calendar.getInstance());
     }
 
     // Downloads html based on parameters
@@ -116,7 +125,7 @@ public class ReplacementTable implements Serializable
 
     // Parses html and returns a 4-sized Object array
     // Object[] = {ArrayList<Replacement>, ArrayList<Message>, String[], String[]}
-    private static Object[] parseHtml(String html)
+    private static Object[] parseHtml(String html, Grade grade) throws WebException
     {
         // Create collector lists for replacements and messages
         ArrayList<Replacement> replacements = new ArrayList<>();
@@ -138,15 +147,52 @@ public class ReplacementTable implements Serializable
         {
             String line = lines[i];
 
+            // -----------------------------------------------
+            // --- Check validity of this ReplacementTable ---
+            // -----------------------------------------------
+            // The server stores all replacements for about 1 year
+            // Sometimes the this old replacements collide with the new ones, consider this example:
+            // ReplacementTable of Grade 11 - Week 1:
+            //     Real Grade: 11
+            // ReplacementTable of Grade 11 - Week 2:
+            //     Real Grade: 12 <- why? | That's because new grades were added and so the whole grade list shifted
+            //                              one up.
+            // To check the validity of the current ReplacementTable, we just have to check the grade embedded in
+            // the HTML code. If it equals our given grade, it's valid. If not then not.
+            // Unique keyword for the line containing the grade: "<BR>"
+
+            if (grade != null)
+            {
+                if (line.contains("<BR>"))
+                {
+                    String strGrade = removeHtmlTags(line)
+                            .replaceAll(" ", "")
+                            .replace("Klasse", "");
+                    Grade _grade = Grade.parse(strGrade);
+                    if (_grade != null)
+                    {
+                        if (!_grade.equals(grade))
+                        {
+                            throw new WebException("Corrupted data");
+                        }
+                    }
+                    else
+                    {
+                        // Interrupt parsing and raise exception
+                        throw new WebException("Corrupted data");
+                    }
+                }
+            }
+
             // -----------------------------
             // --- Retrieve current date ---
             // -----------------------------
-            // Messages in the html code have no property or attribute which indicates it's
+            // Messages in html code have no property or attribute which indicates its
             // current date, but luckily the html itself contains lines which are easily parsable.
             // Some lines contain the current day names within <b> tags. The <b> tags also only appear
             // at this places, so they are unique and save to parse.
 
-            if (line.contains("<b>"))
+            if (line.contains("<b>") && !inMessage)
             {
                 // In a current date line
                 // Perform a substring
@@ -176,15 +222,27 @@ public class ReplacementTable implements Serializable
             {
                 // First remove the first part from '<tr..' until '"center">'
                 int start = line.indexOf("\">") + 2; // Add 2 because keyword "">" is 2 chars long
-                line = line.substring(start, line.length());
+                line = line.substring(start);
                 // Get data by splitting line with keyword "</td><td class="list" align="center">"
-                ArrayList<String> data = new ArrayList<>(Arrays.asList(line.split("</td><td class=\"list\" align=\"center\">")));
+                line = line
+                        .replaceAll("</td><td class=\"list\" align=\"center\">", "</td><td class=\"list\">")
+                        .replaceAll("&nbsp;", "---");
+                ArrayList<String> data = new ArrayList<>(Arrays.asList(line.split("</td><td class=\"list\">")));
                 data.add(1, currentDay);
+
                 // Convert to String Array
                 String[] data_arr = new String[data.size()];
                 data_arr = data.toArray(data_arr);
+                // Remove brackets from grade data (not occurring all the time)
+                data_arr[2] = data_arr[2].replace("(", "").replace(")", "");
                 // Remove html tags from data piece
-                data_arr[7] = data_arr[7].replace("</td></tr>", "").replace("&nbsp;", "");
+                data_arr[7] = data_arr[7].replace("</td></tr>", "");
+                // Add (forgotten?) "fällt aus" if new room and new subject are empty
+                if (data_arr[4].equals("---") && data_arr[5].equals("---") && data_arr[7].equals(""))
+                {
+                    data_arr[7] = "fällt aus";
+                }
+
                 // Build replacement
                 Replacement.Builder builder = Replacement.Builder
                         .fromData(data_arr);
@@ -220,9 +278,18 @@ public class ReplacementTable implements Serializable
             if (inMessage)
             {
                 // We are here if we previously flagged the boolean inMessage.
+
                 // Clean string
-                line = line.replaceAll("<br>", " ").replaceAll("\r", "");
+                line = line.replaceAll("\r", "");
+                while (line.contains("<br><br>"))
+                {
+                    line = line.replace("<br><br>", "<br>");
+                }
+
+                line = line.replaceAll("<br>", "\n");
                 String text = removeHtmlTags(line).trim().replaceAll(" {2}", " "); // Remove double spaces
+
+                // Add string to the whole message
                 messageTextBuilder.append(text);
                 continue;
             }
@@ -266,7 +333,7 @@ public class ReplacementTable implements Serializable
     }
 
     // Private constructor which initializes table with the help of the results object array
-    private ReplacementTable(Object[] results, Grade grade)
+    private ReplacementTable(Object[] results, Grade grade, Calendar downloadDate)
     {
         assert results.length == 4;
         replacements = (ArrayList<Replacement>) results[0];
@@ -274,6 +341,7 @@ public class ReplacementTable implements Serializable
         dates = (String[]) results[2];
         days = (String[]) results[3];
         this.grade = grade;
+        this.downloadDate = downloadDate;
         // Remove double replacements
         optimize();
     }
@@ -294,42 +362,58 @@ public class ReplacementTable implements Serializable
      * @param filter Filter map used to determine if replacement should be returned
      * @return All replacements after the filter was applied
      */
-    public List<Replacement> getReplacements(Map<ReplacementFilter, String[]> filter)
+    public List<Replacement> getReplacements(Map<ReplacementFilter, Collection<String>> filter)
     {
-        // New List where filtered replacements will be added
+        return getReplacements(filter, null);
+    }
+
+    /**
+     * Returns all replacements, which meet all criteria of the filter and are unknown due to
+     * the knownEntries map
+     *
+     * @param filter Filter map used to determine if replacement should be returned
+     * @return All replacements after the filter was applied
+     */
+    public List<Replacement> getReplacements(Map<ReplacementFilter, Collection<String>> filter, Map<ReplacementFilter, Collection<String>> knownEntries)
+    {
         ArrayList<Replacement> filtered = new ArrayList<>();
+        ReplacementFilter[] keys = ReplacementFilter.values();
 
         for (Replacement replacement : replacements)
         {
-            String[] data = replacement.data;
-            Set<ReplacementFilter> keys = filter.keySet();
-            // Indicates that the replacement shouldn't be added in the list
-            boolean breakOut = false;
+            boolean canAddReplacement = true;
 
             for (ReplacementFilter key : keys)
             {
-                String[] values = filter.get(key);
-                // If the replacement doesn't contain any filter value it shouldn't be added
-                // into the filtered list.
-                boolean hasValue = false;
+                String dataChunk = replacement.data[key.ordinal()];
 
-                for (String value : values)
+                // Is the replacement data known?
+                try
                 {
-                    if (data[key.ordinal()].contains(value))
+                    Collection<String> entries = knownEntries.get(key);
+                    if (entries != null && !entries.contains(dataChunk))
                     {
-                        hasValue = true;
+                        // Data is unknown, so it won't be checked by the filter and go through
+                        canAddReplacement = true;
                         break;
                     }
                 }
+                catch (NullPointerException e) {}
 
-                if (!hasValue)
+                // Is the replacement valid?
+                try
                 {
-                    breakOut = true;
-                    break;
+                    Collection<String> filterValues = filter.get(key);
+                    if (filterValues != null && !filterValues.contains(dataChunk))
+                    {
+                        canAddReplacement = false;
+                        break;
+                    }
                 }
+                catch (NullPointerException e) {}
             }
 
-            if (!breakOut)
+            if (canAddReplacement)
             {
                 filtered.add(replacement);
             }
@@ -421,5 +505,15 @@ public class ReplacementTable implements Serializable
     public String[] getDays()
     {
         return days.clone();
+    }
+
+    /**
+     * Returns the date on which this ReplacementTable was downloaded
+     *
+     * @return Download date
+     */
+    public Calendar getDownloadDate()
+    {
+        return downloadDate;
     }
 }
