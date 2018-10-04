@@ -11,11 +11,11 @@ public class Grade implements Serializable
 {
     // All grade values that are possible
     private static final List<String> grades = Arrays.asList(
-            "5a", "5b", "5c", "5d",
+            "5a", "5b", "5c", "5d", "5e", "5f",
             "6a", "6b", "6c", "6d",
             "7a", "7b", "7c", "7d",
             "8a", "8b", "8c", "8d",
-            "9a", "9b", "9c", "9d", "9e",
+            "9a", "9b", "9c", "9d",
             "10a", "10b", "10c", "10d", "10e",
             "11", "12",
             "xy"
@@ -39,8 +39,14 @@ public class Grade implements Serializable
      */
     public static Grade parse(String grade)
     {
+        // Check for safety
+        if (grade == null)
+        {
+            return null;
+        }
+
         // Making our grade string parsing-ready
-        grade = grade.trim().toLowerCase();
+        grade = grade.trim().toLowerCase().replace("jg1", "11").replace("jg2", "12");
         // Index
         //         = -1 -> if grade was not found in list
         //         => 0 -> if grade was found in list
