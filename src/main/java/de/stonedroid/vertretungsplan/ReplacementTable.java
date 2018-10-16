@@ -151,7 +151,7 @@ public class ReplacementTable implements Serializable
             // --- Check validity of this ReplacementTable ---
             // -----------------------------------------------
             // The server stores all replacements for about 1 year
-            // Sometimes the this old replacements collide with the new ones, consider this example:
+            // Sometimes this old replacements collide with the new ones, consider this example:
             // ReplacementTable of Grade 11 - Week 1:
             //     Real Grade: 11
             // ReplacementTable of Grade 11 - Week 2:
@@ -238,7 +238,7 @@ public class ReplacementTable implements Serializable
                 // Remove html tags from data piece
                 data_arr[7] = data_arr[7].replace("</td></tr>", "");
                 // Add (forgotten?) "fällt aus" if new room and new subject are empty
-                if (data_arr[4].equals("---") && data_arr[5].equals("---") && data_arr[7].equals(""))
+                if (data_arr[4].equals("---") && data_arr[5].equals("---") && data_arr[7].equals("---"))
                 {
                     data_arr[7] = "fällt aus";
                 }
