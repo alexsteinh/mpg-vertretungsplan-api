@@ -23,7 +23,7 @@ final class Utils
         // Contains the number of bytes which are actually read.
         int len;
 
-        // Read as long as stream.read() doesn't return
+        // Read as long as stream.read() doesn't return -1
         // If stream.read() is -1, EOF was reached
         while ((len = stream.read(buffer)) != -1)
         {
