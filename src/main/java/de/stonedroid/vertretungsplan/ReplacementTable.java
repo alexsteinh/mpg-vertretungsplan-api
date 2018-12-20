@@ -199,11 +199,6 @@ public class ReplacementTable implements Serializable
                 int start = line.indexOf("<b>") + 3; // Add 3 because keyword "<b>" is 3 chars long.
                 int end = line.indexOf(" ", start);
                 currentDate = line.substring(start, end);
-                // Remove last "." from date
-                if (currentDate.endsWith("."))
-                {
-                    currentDate = currentDate.substring(0, currentDate.length() - 1);
-                }
                 start += currentDate.length() + 1;
                 end = line.indexOf("</", start);
                 currentDay = line.substring(start, end);
@@ -240,11 +235,6 @@ public class ReplacementTable implements Serializable
                 // Convert to String Array
                 String[] data_arr = new String[data.size()];
                 data_arr = data.toArray(data_arr);
-                // Remove last "." from date
-                if (data_arr[0].endsWith("."))
-                {
-                    data_arr[0] = data_arr[0].substring(0, data_arr[0].length() - 1);
-                }
                 // Remove brackets from grade data (not occurring all the time)
                 data_arr[2] = data_arr[2].replace("(", "").replace(")", "");
                 // Remove " R" at the end of a room
