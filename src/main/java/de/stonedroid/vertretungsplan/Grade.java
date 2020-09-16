@@ -13,12 +13,12 @@ public class Grade implements Serializable
     private static final List<String> grades = Arrays.asList(
             "5a", "5b", "5c", "5d", "5e", "5f",
             "6a", "6b", "6c", "6d",
-            "7a", "7b", "7c", "7d",
+            "7a", "7b", "7c", "7d", "7e", "7f",
             "8a", "8b", "8c", "8d",
             "9a", "9b", "9c", "9d",
-            "10a", "10b", "10c", "10d", "10e",
-            "11", "12",
-            "xy"
+            "10a", "10b", "10c", "10d",
+            "xy", "/b",
+            "11", "12"
     );
 
     // This points to the grade value of the grades list above
